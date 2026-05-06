@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Girl 💗</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #ffe4ec, #ffd6e7);
+    text-align: center;
+    overflow: hidden;
+}
+
+/* JUDUL */
+h1 {
+    margin: 10px;
+    font-size: 32px;
+    color: #ff4d88;
+}
+
+/* SLIDER */
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease;
+    touch-action: pan-y;
+}
+
+.slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* FOTO KOTAK */
+.photo-box {
+    width: 90%;
+    height: 80%;
+    background: white;
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 8px 20px rgba(255,105,180,0.2);
+}
+
+.photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+/* BUTTON */
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff66a3;
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* ZOOM MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+}
+
+.modal img {
+    margin: auto;
+    display: block;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 15px;
+}
+
+/* EMOJI */
+.emoji {
+    position: fixed;
+    font-size: 25px;
+    opacity: 0.3;
+    animation: float 10s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    50% { opacity: 0.4; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>💗 My Girl 💗</h1>
+
+<div class="slider-container">
+<button class="prev" onclick="prevSlide()">❮</button>
+
+<div class="slider" id="slider">
+
+<div class="slide"><div class="photo-box"><img src="foto1.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto2.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto3.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto4.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto5.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto6.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto7.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto8.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto9.jpg" onclick="openModal(this.src)"></div></div>
+<div class="slide"><div class="photo-box"><img src="foto10.jpg" onclick="openModal(this.src)"></div></div>
+
+</div>
+
+<button class="next" onclick="nextSlide()">❯</button>
+</div>
+
+<!-- MODAL -->
+<div id="myModal" class="modal" onclick="closeModal()">
+    <img id="modalImg">
+</div>
+
+<script>
+let index = 0;
+const slider = document.getElementById("slider");
+const totalSlides = document.querySelectorAll(".slide").length;
+
+function showSlide() {
+    slider.style.transform = `translateX(-${index * 100}%)`;
+}
+
+function nextSlide() {
+    index = (index + 1) % totalSlides;
+    showSlide();
+}
+
+function prevSlide() {
+    index = (index - 1 + totalSlides) % totalSlides;
+    showSlide();
+}
+
+/* AUTO */
+let autoSlide = setInterval(nextSlide, 3000);
+
+/* SWIPE */
+let startX = 0;
+let endX = 0;
+
+slider.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    clearInterval(autoSlide);
+});
+
+slider.addEventListener("touchmove", (e) => {
+    endX = e.touches[0].clientX;
+});
+
+slider.addEventListener("touchend", () => {
+    let diff = startX - endX;
+    if (diff > 50) nextSlide();
+    else if (diff < -50) prevSlide();
+});
+
+/* ZOOM */
+function openModal(src) {
+    document.getElementById("myModal").style.display = "block";
+    document.getElementById("modalImg").src = src;
+}
+
+function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+}
+
+/* EMOJI */
+const emojis = ["🌸","💞","💐"];
+
+function createEmoji() {
+    const e = document.createElement("div");
+    e.className = "emoji";
+    e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left = Math.random()*100+"vw";
+    e.style.fontSize = (20+Math.random()*20)+"px";
+    e.style.animationDuration = (5+Math.random()*5)+"s";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),10000);
+}
+
+setInterval(createEmoji, 500);
+</script>
+
+</body>
+</html>ld(b);
+    setTimeout(()=>b.remove(),8000);
+}
+setInterval(createBubble,800);
+</script>
+
+</body>
+</html>
